@@ -108,15 +108,14 @@ To submit a package to _Bioconductor_:
   '3b. declined'.
 
 * If your package is accepted, it will be added to _Bioconductor_'s
-  Subversion source control repository and to the nightly 'devel'
+  Git source control repository and to the nightly 'devel'
   builds. All packages in the 'devel' branch of the repository are
   'released' to the user community once every six months, in
   approximately April and October.
 
 * Once the review process is complete, the issue you created will be
   closed. All updates to your package will be through the
-  _Bioconductor_ [Subversion repository][10] (optionally,
-  [using GitHub][11]).
+  _Bioconductor_ [Git repository][10].
 
 ## Adding a Web Hook
 
@@ -247,6 +246,6 @@ If you have a question not answered above, please ask on the
 [7]: https://bioconductor.org/developers/package-submission/
 [8]: https://bioconductor.org/developers/
 [9]: https://stat.ethz.ch/mailman/listinfo/bioc-devel
-[10]: http://bioconductor.org/developers/how-to/source-control/
+[10]: https://bioconductor.org/developers/how-to/git/
 [11]: http://bioconductor.org/developers/how-to/git-mirrors/
 [12]: https://help.github.com/articles/connecting-to-github-with-ssh/
