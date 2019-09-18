@@ -194,12 +194,16 @@ vignette. Remember to avoid circular dependencies between packages.
 2. Continue working with this package until it builds and checks
    without error on any platform.
 
+**Do not submit an AdditionalPackage with the line shown in step 3 until a 
+`review in progress` tag has been added to your package and your first
+package receives a build report**
+
 3. Submit additional packages to the same issue. Do this by posting a
    comment containing a line like:
 
 	AdditionalPackage: https://github.com/username/repositoryname
 
-   Include only one `AdditionalPackage` line per comment.  Wait until
+   Include only one `AdditionalPackage` line per comment. Wait until
    this related package builds before submitting further related
    packages. Do this only after the first build has posted for original package
    submitted and the package has been awarded a `review in progress` label.
