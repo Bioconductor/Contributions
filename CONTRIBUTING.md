@@ -61,13 +61,13 @@ To submit a package to _Bioconductor_:
   package, to ensure that it is intended for _Bioconductor_. Appropriate
   packages will be labelled '1b. awaiting git addition.
 
-* The moderator will add you package as a repository to the
+* The moderator will add your package as a repository to the
   git.bioconductor.org git server, copy the SSH keys from your github
   account to the [BiocCredentials][15] application, and assign a
   reviewer. The package will be labelled '2. Review in progress'.
 
   ALL CHANGES TO YOUR PACKAGE must be pushed to the
-  git.bioconductor.org repository created in this setp. See the [new
+  git.bioconductor.org repository created in this step. See the [new
   package workflow][14] for instructions on pushing changes to your
   git.bioconductor.org repository.
 
@@ -165,14 +165,14 @@ vignette. Remember to avoid circular dependencies between packages.
    usually the experiment data package). Do this by creating a
    [new issue][5] as described above.
 
-2. Continue working with this package until it builds and checks
+1. Continue working with this package until it builds and checks
    without error on any platform.
 
     **Do not submit an AdditionalPackage with the line shown in step 3
     until a `review in progress` tag has been added to your package
     and your first package receives a build report**
 
-3. Submit additional packages to the same issue. Do this by posting a
+1. Submit additional packages to the same issue. Do this by posting a
    comment containing a line like:
 
         AdditionalPackage: https://github.com/username/repositoryname
@@ -182,13 +182,13 @@ vignette. Remember to avoid circular dependencies between packages.
    has been updated by you to build successfully before submitting
    further related packages.
 
-4. The `AdditionalPackage` comment must be posted by the same GitHub
+1. The `AdditionalPackage` comment must be posted by the same GitHub
    user who created the issue. Also, the initial package submitted in
    the issue must have completed the 'moderation' step. If these
    conditions are not met, the additional package will not build.
 
-5. The additional package will go through the same preapproval process as
-described in [What to Expect][3]
+1. The additional package will go through the same preapproval process as
+   described in [What to Expect][3]
 
 ### Circular Dependencies
 
@@ -205,21 +205,21 @@ package before tryng to build or check.
    package). Do this by creating a [new issue][5] as described above. We will
    call this package A.
 
-2. This package A will `ERROR` when running R CMD build. This is expected since
+1. This package A will `ERROR` when running R CMD build. This is expected since
    the additional package B would not be found yet.
 
-3. Submit the additional packages to the same issue. Do this by posting a
+1. Submit the additional packages to the same issue. Do this by posting a
    comment containing a line like:
 
         AdditionalPackage: https://github.com/username/repositoryname
 
-4. This package B will also `ERROR` when running R CMD build. This is expected.
+1. This package B will also `ERROR` when running R CMD build. This is expected.
 
-5. Now, perform a version bump on the package A. It should find package B and
+1. Now, perform a version bump on the package A. It should find package B and
    not `ERROR` for a missing dependency. Continue working with package A until it
    builds and checks without error on any platform.
 
-6. Perform a version bump on package B. It should now find package A and not
+1. Perform a version bump on package B. It should now find package A and not
    `ERROR` for its missing dependency. Continue with the review process.
 
 ## Additional Actions
