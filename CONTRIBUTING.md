@@ -187,8 +187,8 @@ vignette. Remember to avoid circular dependencies between packages.
    the issue must have completed the 'moderation' step. If these
    conditions are not met, the additional package will not build.
 
-5. [Add a webhook][3] for each additional package, so that any changes
-   (accompanied by a version bump) trigger a new build.
+5. The additional package will go through the same preapproval process as
+described in [What to Expect][3]
 
 ### Circular Dependencies
 
@@ -215,14 +215,11 @@ package before tryng to build or check.
 
 4. This package B will also `ERROR` when running R CMD build. This is expected.
 
-6. [Add a webhook][3] for each package, so that any changes
-   (accompanied by a version bump) trigger a new build.
-
-7. Now, perform a version bump on the package A. It should find package B and
+5. Now, perform a version bump on the package A. It should find package B and
    not `ERROR` for a missing dependency. Continue working with package A until it
    builds and checks without error on any platform.
 
-8. Perform a version bump on package B. It should now find package A and not
+6. Perform a version bump on package B. It should now find package A and not
    `ERROR` for its missing dependency. Continue with the review process.
 
 ## Additional Actions
@@ -260,7 +257,7 @@ If you have a question not answered above, please ask on the
 
 [1]: https://bioconductor.org
 [2]: https://help.github.com/articles/create-a-repo/
-[3]: #adding-a-web-hook
+[3]: #what-to-expect
 [4]: https://bioconductor.org/packages/devel/bioc/html/BiocCheck.html
 [5]: ../../issues/new
 [6]: https://bioconductor.org/developers/package-guidelines/
