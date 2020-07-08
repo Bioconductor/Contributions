@@ -3,8 +3,7 @@
 - [Contributing a _Bioconductor_ Package](#contributing-a-bioconductor-package)
 - [Starting the Submission Process](#starting-the-submission-process)
 - [What to Expect](#what-to-expect)
-- [Adding a Web Hook](#adding-a-web-hook)
-  - [R CMD check environment](#r-cmd-check-environment)
+- [R CMD check environment](#r-cmd-check-environment)
 - [Submitting Related Packages](#submitting-related-packages)
   - [Circular Dependencies](#circular-dependencies)
 - [Additional Actions](#additional-actions)
@@ -41,11 +40,12 @@ By using this service, please note that:
 To submit a package to _Bioconductor_:
 
 1. Create your own [GitHub repository][2], containing source code
-   structured as an _R_ package. The source code must be in a
-   default 'master' branch of your GitHub repository.
+   structured as an _R_ package. The source code must be in a default
+   'master' branch of your GitHub repository. The master branch must
+   contain only package code.
 
-1. [Add SSH public key(s)][12] to your GitHub account. The SSH key
-   pair will be used after package acceptance for updating the
+1. [Add SSH public key(s)][12] to your GitHub account. SSH keys will
+   be used during and after package acceptance for updating the
    Bioconductor git repository.
 
 1. [Open a new issue][5]. Complete the issue by adding the link to
@@ -54,41 +54,56 @@ To submit a package to _Bioconductor_:
    responsibilities. Provide the name of your package as the 'Title'
    of the issue.
 
-1. [Add a webhook][3] to your repository. The webhook means that any
-   commit to the default 'master' branch automatically triggers a new
-   package build.
-
 ## What to Expect
 
-* A new package is initially labeled as '1. awaiting moderation'.
+* A new package is initially labeled as '1a. awaiting moderation'.
   A _Bioconductor_ team member will take a very brief look at your
   package, to ensure that it is intended for _Bioconductor_. Appropriate
-  packages will be re-labelled '2. review in progress'.
+  packages will be labelled '1b. awaiting git addition.
+
+* The moderator will add your package as a repository to the
+  git.bioconductor.org git server, copy the SSH keys from your github
+  account to the [BiocCredentials][15] application, and assign a
+  reviewer. The package will be labelled '2. Review in progress'.
+
+  ALL CHANGES TO YOUR PACKAGE must be pushed to the
+  git.bioconductor.org repository created in this step. See the [new
+  package workflow][14] for instructions on pushing changes to your
+  git.bioconductor.org repository.
 
 * The package will be submitted to the _Bioconductor_ build
-  system. The system will check out your package from GitHub. It will
-  then run `R CMD build` to create a 'tarball' of your source code,
-  vignettes, and man pages. It will run `R CMD check` on the tarball,
-  to ensure that the package conforms to standard _R_ programming best
-  practices.  _Bioconductor_ has chosen to utilize a custom `R CMD check`
-  environment; See [R CMD check environment][13] for more details. Finally, the
-  build system will run `R CMD BiocCheck` to ensure that the package conforms to
-  _Bioconductor_ [BiocCheck][4]
-  standards. The system will perform these steps using the
-  ['devel' version](https://bioconductor.org/developers/how-to/useDevel/)
-  of _Bioconductor_, on three platforms (Linux, Mac OS X, and
-  Windows).  After these steps are complete, a link to a build report
-  will be appended to the new package issue. Avoid surprises by
+  system. The system will check out your package from
+  git.bioconductor.org.
+
+  The build system will run `R CMD build` to create a 'tarball' of
+  your source code, vignettes, and man pages.
+
+  The build system will run `R CMD check` on the tarball, to ensure
+  that the package conforms to standard _R_ programming best
+  practices.  _Bioconductor_ has chosen to utilize a custom `R CMD
+  check` environment; See [R CMD check environment][13] for more
+  details.
+
+  Finally, the build system will run `R CMD BiocCheck` to ensure that
+  the package conforms to _Bioconductor_ [BiocCheck][4] standards.
+
+  The system performs these steps using the ['devel' version][16] of
+  _Bioconductor_, on three platforms (Linux, Mac OS X, and Windows).
+
+* After the build steps are complete, a link to a build report will be
+  appended to the new package issue on GitHub. Avoid surprises by
   running these checks on your own computer, under the 'devel' version
   of _Bioconductor_, before submitting your package.
 
 * If the build report indicates problems, modify your package and
   commit changes to the default branch of your GitHub repository.  If
-  there are problems that you do not understand, seek help on the
-  [bioc-devel][9] mailing list.
+  there are problems that you do not understand, seek help from your
+  reviewer via a comment on the issue, or on the [bioc-devel][9]
+  mailing list.
 
 * To trigger a new build, include a version bump in your commit, e.g.,
-  from `Version: 0.99.0` to `Version: 0.99.1`.
+  from `Version: 0.99.0` to `Version: 0.99.1`. Push the changes
+  including version bump to your repository on git.bioconductor.org.
 
 * Once your package builds and checks without errors or (avoidable)
   warnings, a _Bioconductor_ team member will provide a technical
@@ -111,20 +126,19 @@ To submit a package to _Bioconductor_:
   '3b. declined'.
 
 * If your package is accepted, it will be added to _Bioconductor_'s
-  Git source control repository and to the nightly 'devel'
-  builds. All packages in the 'devel' branch of the repository are
-  'released' to the user community once every six months, in
-  approximately April and October.
+  nightly 'devel' builds. All packages in the 'devel' branch of the
+  repository are 'released' to the user community once every six
+  months, in approximately April and October.
 
 * Once the review process is complete, the issue you created will be
   closed. All updates to your package will be through the
-  _Bioconductor_ [Git repository][10] (optionally,
-  [using GitHub][11]).
+  _Bioconductor_ [Git repository][10].
 
 ## R CMD check environment
+
 It is possible to activate or deactivate a number of options in `R CMD build`
 and `R CMD check`. Options can be set as individual environment variables or
-they can be [listed in a file](https://cran.r-project.org/doc/manuals/r-release/R-exts.html#Checking-and-building-packages). 
+they can be [listed in a file](https://cran.r-project.org/doc/manuals/r-release/R-exts.html#Checking-and-building-packages).
 Descriptions of all the different options available can be found [here](https://cran.r-project.org/doc/manuals/r-devel/R-ints.html#Tools).
 _Bioconductor_ has chosen to customize some of these options for incoming
 submission during `R CMD check`. The file of utilized flags can be downloaded
@@ -133,51 +147,11 @@ from
 file can either be place in a default directory as directed
 [here](https://cran.r-project.org/doc/manuals/r-release/R-exts.html#Checking-and-building-packages)
 or can be set through environment variable `R_CHECK_ENVIRON` with a command
-similar to 
+similar to
 
 ```
 export R_CHECK_ENVIRON = <path to downloaded file>
 ```
-
-## Adding a Web Hook
-
-To add a web hook:
-
-1. Go to your repository page on GitHub. The link to it will look
-   something like this:
-
-	https://github.com/yourusername/yourpackagename
-
-   Of course, `yourusername` and `yourpackagename` will be different.
-
-2. Click on `Settings`, which is currently located towards the top, on
-   the right-hand side of the page.
-
-3. In the left hand `Options` section, click on `Webhooks`.
-
-4. Click on `Add webhook`.
-
-5. Paste the following URL into the `Payload URL` box, leaving the
-   other settings alone:
-
-	http://issues.bioconductor.org
-
-6. Confirm that the `Content type` drop-down menu has
-   `application/json` selected.
-
-7. Click `Add webhook`.
-
-8. The page will be updated to include a link to the web hook. Click
-   on the link. A 'Recent Deliveries' area should contain a single
-   request. Click on the Request and view the "Response" tab. There
-   should be a green `200` response code, with body `ping received,
-   Bioconductor/Contributions webhook ok`.
-
-Subsequent pushes to the default `master` branch of your
-repository will now trigger builds (only if the package version
-has been bumped), and the build reports will be
-posted to the issue you created in this repository.  Note that pushes
-to branches that are not `master`, or non-default branches, are ignored.
 
 ## Submitting Related Packages
 
@@ -191,30 +165,30 @@ vignette. Remember to avoid circular dependencies between packages.
    usually the experiment data package). Do this by creating a
    [new issue][5] as described above.
 
-2. Continue working with this package until it builds and checks
+1. Continue working with this package until it builds and checks
    without error on any platform.
 
-**Do not submit an AdditionalPackage with the line shown in step 3 until a 
-`review in progress` tag has been added to your package and your first
-package receives a build report**
+    **Do not submit an AdditionalPackage with the line shown in step 3
+    until a `review in progress` tag has been added to your package
+    and your first package receives a build report**
 
-3. Submit additional packages to the same issue. Do this by posting a
+1. Submit additional packages to the same issue. Do this by posting a
    comment containing a line like:
 
-	AdditionalPackage: https://github.com/username/repositoryname
+        AdditionalPackage: https://github.com/username/repositoryname
 
    Include only one `AdditionalPackage` line per comment. Wait until
-   this related package builds before submitting further related
-   packages. Do this only after the first build has posted for original package
-   submitted and the package has been awarded a `review in progress` label.
+   this related package has been added to git.bioconductor.org, and it
+   has been updated by you to build successfully before submitting
+   further related packages.
 
-4. The `AdditionalPackage` comment must be posted by the same GitHub
+1. The `AdditionalPackage` comment must be posted by the same GitHub
    user who created the issue. Also, the initial package submitted in
    the issue must have completed the 'moderation' step. If these
    conditions are not met, the additional package will not build.
 
-5. [Add a webhook][3] for each additional package, so that any changes
-   (accompanied by a version bump) trigger a new build.
+1. The additional package will go through the same preapproval process as
+   described in [What to Expect][3]
 
 ### Circular Dependencies
 
@@ -231,24 +205,21 @@ package before tryng to build or check.
    package). Do this by creating a [new issue][5] as described above. We will
    call this package A.
 
-2. This package A will `ERROR` when running R CMD build. This is expected since
+1. This package A will `ERROR` when running R CMD build. This is expected since
    the additional package B would not be found yet.
 
-3. Submit the additional packages to the same issue. Do this by posting a
+1. Submit the additional packages to the same issue. Do this by posting a
    comment containing a line like:
 
-	AdditionalPackage: https://github.com/username/repositoryname
+        AdditionalPackage: https://github.com/username/repositoryname
 
-4. This package B will also `ERROR` when running R CMD build. This is expected.
+1. This package B will also `ERROR` when running R CMD build. This is expected.
 
-6. [Add a webhook][3] for each package, so that any changes
-   (accompanied by a version bump) trigger a new build.
-
-7. Now, perform a version bump on the package A. It should find package B and
+1. Now, perform a version bump on the package A. It should find package B and
    not `ERROR` for a missing dependency. Continue working with package A until it
-   builds and checks without error on any platform. 
+   builds and checks without error on any platform.
 
-8. Perform a version bump on package B. It should now find package A and not
+1. Perform a version bump on package B. It should now find package A and not
    `ERROR` for its missing dependency. Continue with the review process.
 
 ## Additional Actions
@@ -258,11 +229,11 @@ To change the repository of your package during the review process:
 1. Edit the first comment in the issue associated with your
    package. Change the Repository: link to point to your new
    repository.
-2. [Add a webhook][3] to the new repository (and remove the
-   corresponding web hook from the old repository).
-3. Post a comment in your issue, including @mtmorgan, indicating that
-   you have changed the repository.
-4. Once the comment is acknowledged, bump the package version in the
+
+1. Post a comment in your issue, tagging your reviewer, indicating
+   that you have changed the repository.
+
+1. Once the comment is acknowledged, bump the package version in the
    new repository to trigger a new build.
 
 To remove an AdditionalPackage: dependency, e.g., because you have
@@ -271,28 +242,13 @@ package unnecessary:
 
 1. Delete or edit all comments with an `AdditionalPackage:` tag.
 
-To debug package commits that don't trigger a response on the
-corresponding issue:
-
-1. Verify that the [web hook][3] is in place.
-
-2. Review 'Recent Deliveries', especially those marked as failures
-   (red triangle with exclamation mark).  Click on the checksum, look
-   at the 'Response' body.
-
-3. If the response body says 'Failed to parse JSON', verify that the
-   web hook (in your repository, 'Settings', 'Webhooks', 'Edit' the
-   web hook you've added) has 'Content type:' equal to
-   `application/json`.
-
-4. After debugging, click the 'Redeliver' button.
-
 ## Resources
 
 The following pages contain more information about package submission.
 
 * [Package Submission][7].
 * [Package Guidelines][6].
+* [New package workflow][14] guidelines for working with git.bioconductor.org.
 * The above and many other developer resources are available at the
   [developers' page][8].
 
@@ -301,7 +257,7 @@ If you have a question not answered above, please ask on the
 
 [1]: https://bioconductor.org
 [2]: https://help.github.com/articles/create-a-repo/
-[3]: #adding-a-web-hook
+[3]: #what-to-expect
 [4]: https://bioconductor.org/packages/devel/bioc/html/BiocCheck.html
 [5]: ../../issues/new
 [6]: https://bioconductor.org/developers/package-guidelines/
@@ -312,3 +268,6 @@ If you have a question not answered above, please ask on the
 [11]: http://bioconductor.org/developers/how-to/git-mirrors/
 [12]: https://help.github.com/articles/connecting-to-github-with-ssh/
 [13]: #r-cmd-check-environment
+[14]: https://bioconductor.org/developers/how-to/git/new-package-workflow/
+[15]: https://git.bioconductor.org/BiocCredentials/
+[16]: https://bioconductor.org/developers/how-to/useDevel/
