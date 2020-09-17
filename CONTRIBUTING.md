@@ -84,8 +84,9 @@ To submit a package to _Bioconductor_:
   check` environment; See [R CMD check environment][13] for more
   details.
 
-  Finally, the build system will run `R CMD BiocCheck` to ensure that
-  the package conforms to _Bioconductor_ [BiocCheck][4] standards.
+  Finally, the build system will run `BiocCheckGitClone()` and 
+  `BiocCheck()` to ensure that the package conforms to
+  _Bioconductor_ [BiocCheck][4] standards.
 
   The system performs these steps using the ['devel' version][16] of
   _Bioconductor_, on three platforms (Linux, Mac OS X, and Windows).
