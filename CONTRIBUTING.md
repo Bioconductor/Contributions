@@ -40,9 +40,11 @@ By using this service, please note that:
 To submit a package to _Bioconductor_:
 
 1. Create your own [GitHub repository][2], containing source code
-   structured as an _R_ package. The source code must be in a default
-   'master' branch of your GitHub repository. The master branch must
-   contain only package code.
+   structured as an _R_ package. The source code must be in the default
+   branch of your GitHub repository. You cannot specify any alternative 
+   branches; the default branch is utilized. The default branch must
+   contain only package code. Any files or directories for other 
+   applications (Github Actions, devtool, etc) should be in a different branch.
 
 1. [Add SSH public key(s)][12] to your GitHub account. SSH keys will
    be used during and after package acceptance for updating the
