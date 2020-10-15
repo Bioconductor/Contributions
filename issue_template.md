@@ -28,6 +28,9 @@ Confirm the following by editing each check box to '[x]'
   of developments in the _Bioconductor_ community, responding promptly
   to requests for updates from the Core team in response to changes in
   _R_ or underlying software.
+  
+- [ ] I am familiar with the [Bioconductor code of conduct][7] and 
+  agree to abide by it.
 
 I am familiar with the essential aspects of _Bioconductor_ software
 management, including:
@@ -47,3 +50,4 @@ to the [bioc-devel][4] mailing list.
 [4]: https://stat.ethz.ch/mailman/listinfo/bioc-devel
 [5]: http://bioconductor.org/developers/how-to/git/
 [6]: http://bioconductor.org/developers/how-to/git/sync-existing-repositories/
+[7]: https://bioconductor.org/about/code-of-conduct/
