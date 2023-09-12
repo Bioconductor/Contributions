@@ -147,7 +147,9 @@ To submit a package to _Bioconductor_:
 Please be mindful that reviewers are volunteers and package reviews are not
 the only responsibility of _Bioconductor_ team members. We like to see the
 review process progress by updates from the submitter or by comments from the
-reviewer within 2-3 weeks. 
+reviewer within 2-3 weeks. The entire review process typically takes between 2
+and 6 weeks. If there is no response after 3 to 4 weeks, package reviewers may
+close the issue until further updates, changes, and/or commentary are received.
 
 
 ## R CMD check environment
