@@ -35,6 +35,9 @@ By using this service, please note that:
   build service we provide is meant only for individuals submitting
   _Bioconductor_ packages.
 
+All interactions should adhere to the [Bioconductor Code of Conduct][11]
+
+
 ## Starting the Submission Process
 
 To submit a package to _Bioconductor_:
@@ -58,20 +61,22 @@ To submit a package to _Bioconductor_:
 
 ## What to Expect
 
-* A new package is initially labeled as '1a. awaiting moderation'.
+* A new package is initially labeled as `1. awaiting moderation`.
   A _Bioconductor_ team member will take a very brief look at your
-  package, to ensure that it is intended for _Bioconductor_. Appropriate
-  packages will be labelled '1b. awaiting git addition.
+  package, to ensure that it is not doing anything malicious or
+  inappropriate. Packages that pass this stage will be labelled
+  `pre-check passed`.
 
 * The moderator will add your package as a repository to the
   git.bioconductor.org git server, copy the SSH keys from your github
-  account to the [BiocCredentials][15] application, and assign a
-  reviewer. The package will be labelled '2. Review in progress'.
+  account to the [BiocCredentials][15] application and the issue labelled
+  `pre-review`.  
 
   ALL CHANGES TO YOUR PACKAGE must be pushed to the
   git.bioconductor.org repository created in this step. See the [new
   package workflow][14] for instructions on pushing changes to your
   git.bioconductor.org repository.
+
 
 * The package will be submitted to the _Bioconductor_ build
   system. The system will check out your package from
@@ -99,9 +104,8 @@ To submit a package to _Bioconductor_:
   of _Bioconductor_, before submitting your package.
 
 * If the build report indicates problems, modify your package and
-  commit changes to the default branch of your GitHub repository.  If
-  there are problems that you do not understand, seek help from your
-  reviewer via a comment on the issue, or on the [bioc-devel][9]
+  commit changes to the `devel` branch on `git.bioconductor.org`.  If
+  there are problems that you do not understand, seek help on the [bioc-devel][9]
   mailing list.
 
 * To trigger a new build, include a version bump in your commit, e.g.,
@@ -109,7 +113,10 @@ To submit a package to _Bioconductor_:
   including version bump to your repository on git.bioconductor.org.
 
 * Once your package builds and checks without errors or (avoidable)
-  warnings, a _Bioconductor_ team member will provide a technical
+  warnings, the package is assigned a reviewer. The package will be
+  labelled `2. Review in progress`. 
+
+* A _Bioconductor_ reviewer will provide a technical
   review of your package.  Other _Bioconductor_ developers and users
   with domain expertise are encouraged to provide additional community
   commentary.  Reviewers will add comments to the issue you created.
@@ -117,16 +124,16 @@ To submit a package to _Bioconductor_:
 * Respond to the issues raised by the reviewers. You _must_ respond to
   the primary reviewer, and are strongly encouraged to consider
   community commentary. Typically your response will involve code
-  modifications; commit these to the default branch of your GitHub
-  repository to trigger subsequent builds. When you have addressed all
-  concerns, add a comment to the issue created in step 2 to explain
-  your response.
+  modifications; commit these to the `devel` branch of
+  `git.bioconductor.org` with a valid version bump to trigger subsequent
+  builds. When you have addressed all concerns, add a comment to the
+  issue created in step 2 to explain your response.
 
 * The reviewer will assess your responses, perhaps suggesting further
   modifications or clarification. The reviewer will then accept your
   package for inclusion in _Bioconductor_, or decline it. The label
-  '2. review in progress' will be replaced by '3a. accepted' or
-  '3b. declined'.
+  `2. review in progress` will be replaced by `3a. accepted` or
+  `3b. declined`.
 
 * If your package is accepted, it will be added to _Bioconductor_'s
   nightly 'devel' builds. All packages in the 'devel' branch of the
@@ -136,6 +143,12 @@ To submit a package to _Bioconductor_:
 * Once the review process is complete, the issue you created will be
   closed. All updates to your package will be through the
   _Bioconductor_ [Git repository][10].
+
+Please be mindful that reviewers are volunteers and package reviews are not
+the only responsibility of _Bioconductor_ team members. We like to see the
+review process progress by updates from the submitter or by comments from the
+reviewer within 2-3 weeks. 
+
 
 ## R CMD check environment
 
@@ -172,8 +185,8 @@ vignette. Remember to avoid circular dependencies between packages.
    without error on any platform.
 
     **Do not submit an AdditionalPackage with the line shown in step 3
-    until a `review in progress` tag has been added to your package
-    and your first package receives a build report**
+    until a `pre-review` or `review in progress` tag has been added to
+    your package and your first package receives a build report**
 
 1. Submit additional packages to the same issue. Do this by posting a
    comment containing a line like:
@@ -227,18 +240,6 @@ package before tryng to build or check.
 
 ## Additional Actions
 
-To change the repository of your package during the review process:
-
-1. Edit the first comment in the issue associated with your
-   package. Change the Repository: link to point to your new
-   repository.
-
-1. Post a comment in your issue, tagging your reviewer, indicating
-   that you have changed the repository.
-
-1. Once the comment is acknowledged, bump the package version in the
-   new repository to trigger a new build.
-
 To remove an AdditionalPackage: dependency, e.g., because you have
 identified AnnnotationHub or other resources that make your additional
 package unnecessary:
@@ -263,14 +264,14 @@ If you have a question not answered above, please ask on the
 [3]: #what-to-expect
 [4]: https://bioconductor.org/packages/devel/bioc/html/BiocCheck.html
 [5]: ../../issues/new
-[6]: https://bioconductor.org/developers/package-guidelines/
-[7]: https://bioconductor.org/developers/package-submission/
-[8]: https://bioconductor.org/developers/
+[6]: https://contributions.bioconductor.org/develop-overview.html
+[7]: https://contributions.bioconductor.org/bioconductor-package-submissions.html
+[8]: https://contributions.bioconductor.org/
 [9]: https://stat.ethz.ch/mailman/listinfo/bioc-devel
-[10]: http://bioconductor.org/developers/how-to/source-control/
-[11]: http://bioconductor.org/developers/how-to/git-mirrors/
+[10]: https://contributions.bioconductor.org/git-version-control.html
+[11]: https://bioconductor.org/about/code-of-conduct/
 [12]: https://help.github.com/articles/connecting-to-github-with-ssh/
 [13]: #r-cmd-check-environment
-[14]: https://bioconductor.org/developers/how-to/git/new-package-workflow/
+[14]: https://contributions.bioconductor.org/git-version-control.html#new-package-workflow
 [15]: https://git.bioconductor.org/BiocCredentials/
-[16]: https://bioconductor.org/developers/how-to/useDevel/
+[16]: https://contributions.bioconductor.org/use-devel.html
