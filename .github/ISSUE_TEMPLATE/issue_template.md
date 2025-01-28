@@ -42,8 +42,8 @@ Confirm the following by editing each check box to '[x]'
   _R_ or underlying software.
 
 - [ ] I understand it is my responsibility to maintain a valid, active
-  email in the DESCRIPTION of my package. This email should allow emails
-  from noreply@bioconductor.org and BBS-noreply@bioconductor.org to allow
+  maintainer email in the DESCRIPTION of my package. This email should allow
+  emails from noreply@bioconductor.org and BBS-noreply@bioconductor.org to allow
   automatic notifications from the Bioconductor team concerning my package.
   
 - [ ] I am familiar with the [Bioconductor code of conduct][7] and 
