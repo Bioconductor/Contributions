@@ -59,6 +59,10 @@ To submit a package to _Bioconductor_:
    responsibilities. Provide the name of your package as the 'Title'
    of the issue.
 
+**NOTE:** The submitter of the package should also be the listed maintainer so
+  we may verify BiocCredentials. Additional push access to other contributors
+  may be granted on request after submission
+
 ## What to Expect
 
 * A new package is initially labeled as `1. awaiting moderation`.
