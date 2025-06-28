@@ -1,0 +1,24 @@
+Package: CGRphylo
+Type: Package
+Title: Chaos Game Representation and Phylogenetic Distance Analysis
+Version: 0.0.1
+Authors@R: 
+    person("Amarinder", "Thind", email = "thind.amarinder@gmail.com", role = c("aut", "cre"),comment = c(ORCID = "0000-0003-4592-0380"))
+Description: This package implements a phylogenetic pipeline based on Chaos Game
+ Representation (CGR) of DNA sequences. It enables sequence filtering, k-mer
+ frequency matrix creation, distance matrix calculation, CGR plotting, and
+ phylogenetic tree construction. It supports output in MEGA and PHYLIP formats
+ and integrates with tools such as ape and treeio for visualization.
+License: MIT + file LICENSE
+Encoding: UTF-8
+biocViews: Software,Phylogenetics,FunctionalGenomics
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.3
+Imports:
+    stringr,
+    utils
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr

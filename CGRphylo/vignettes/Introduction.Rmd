@@ -1,0 +1,280 @@
+---
+title: "CGRPhylo Pipeline: Chaos Game Representation for Phylogeny"
+author: "Amarinder Singh Thind"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{CGRPhylo Pipeline}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_knit$set(root.dir = ".")
+
+```
+
+Introduction
+The CGRPhylo pipeline implements a Chaos Game Representation (CGR)-based method to analyze DNA sequences and construct phylogenetic trees. This approach encodes DNA sequences into numerical representations that capture sequence patterns and enables distance-based phylogenetic analysis without traditional sequence alignment.
+
+This vignette demonstrates the full pipeline workflow starting from raw DNA sequences in FASTA format, filtering sequences based on ambiguous base content, generating sequence metadata, calculating CGR frequency matrices, computing distance matrices, and finally building and visualizing phylogenetic trees.
+
+Workflow Overview
+The main steps covered in this vignette include:
+
+Loading and preprocessing raw DNA sequences.
+
+Filtering sequences by the number of ambiguous bases (e.g., 'N').
+
+Extracting sequence metadata such as length and GC content.
+
+Generating CGR plots for visual sequence analysis.
+
+Computing k-mer frequency matrices using the CGR method.
+
+Calculating pairwise distances between sequences using multiple metrics.
+
+Saving distance matrices in formats compatible with phylogenetic software (MEGA, PHYLIP).
+
+Building neighbor-joining trees and visualizing them using the ape package.
+
+Exporting trees in Newick and Nexus formats.
+
+Integrating with Bioconductor tree visualization tools like treeio and ggtree.
+
+Setup: Load required source files and input FASTA sequences
+ 
+
+
+```{r}
+
+library(CGRphylo)
+library("seqinr")
+
+file <- "Input_recom_SARS_cov2.fasta"
+
+fastafile <- seqinr::read.fasta(file = file, seqtype = "DNA", as.string = TRUE, set.attributes = FALSE)
+
+```
+
+
+## Filtering of the sequencing with a specified number of 'N'  bases
+
+
+```{r}
+library(stringr)
+
+N_filter <- 50  ## filter sequence with n bases > this value
+fasta_filtered <- fastafile_new(fastafile, N_filter) ## create filtered sequence file
+
+```
+
+## Create Meta info from the sequence 
+
+```{r} 
+meta <- create_meta(fastafile, N_filter) ## create seq features information
+print(paste("std dev for seq length is",sd(meta$length),sep=" "))
+print(paste("Median of the seq length is",median(meta$length),sep=" "))
+print("Range of the seq length")
+range(meta$length)
+```
+
+# plot sequence length
+```{r} 
+
+#boxplot(meta$length, ylab="Sequence length") ## overall
+dotchart(meta$length, labels = meta$name, xlab = "Sequence length", pch = 21, bg = "green", pt.cex = 1, cex = 0.7)
+
+dotchart(meta$GC_content, labels = meta$name, xlab = "GC content", pch = 21, bg = "green", pt.cex = 1, cex = 0.7)
+
+###########
+## box plot for each strains #(In this example first part of the name is strain name)
+
+meta$strains <- as.character(lapply(meta$name, function(x) strsplit(x, '_')[[1]][1])) ## split strains names
+
+library(ggplot2)
+ggplot(meta, aes(x = strains, y =length, color = strains )) + geom_boxplot()+ ylab("Sequence length (group level)")+coord_flip() 
+
+library(ggplot2)
+ggplot(meta, aes(x = strains, y =GC_content, color = strains )) + geom_boxplot()+ ylab("GC content (group level)")+coord_flip() 
+
+
+len_trim <- min(meta$length)
+
+####### Save metadata into a file
+#write.csv(meta,paste("length_and_names",N_filter,".csv"))
+```
+
+## CGR plot
+
+```{r}
+
+cgr1 <- cgrplot(1) ## enter the number of sequence from  "fasta_filtered"
+
+
+plot(cgr1[,1],cgr1[,2], main=paste("CGR plot of", names(fasta_filtered)[1],sep=''),
+     xlab = "", ylab = "", cex=0.2, pch = 4, frame = TRUE) 
+
+#compare 2 CGR plots
+cgr2 <- cgrplot(4)
+
+library('RColorBrewer')
+pal <- brewer.pal(8,"Dark2")
+par(mfrow=c(1,2))
+
+plot(cgr1[,1],cgr1[,2], main=paste("CGR plot of ", names(fasta_filtered)[1],sep=''),
+     xlab = "", ylab = "", cex.main=0.5, cex=0.4, pch = 4, frame = TRUE) 
+plot(cgr2[,1],cgr2[,2], main=paste("CGR plot of ", names(fasta_filtered)[2],sep=''),
+     xlab = "", ylab = "",cex.main=0.5,cex=0.4,pch = 4, frame = TRUE) 
+
+```
+
+## Create frequency object for sequences 
+
+```{r}
+library(parallel)
+
+k_mer <- 3  ## define the value of K
+sequence_new <- names(fasta_filtered)
+num_cores <- detectCores() - 1  # Use one less than max to avoid freezing system
+
+# Define the wrapper function
+process_sequence <- function(n) {
+  seq_name <- sequence_new[n]
+  message(paste("Processing sequence:", n, seq_name))
+  result <- cgat(k_mer, n, len_trim)
+  return(result)
+}
+
+# Run in parallel using mclapply (works on Linux/macOS)
+Freq_mat_obj <- mclapply(1:length(fasta_filtered), process_sequence, mc.cores = num_cores)
+
+# Assign names to the result list
+names(Freq_mat_obj) <- sequence_new
+
+
+```
+
+```{r}
+k_mer <- 3  ## define the value of K
+Freq_mat_obj <- list()
+sequence_new <- names(fasta_filtered) 
+
+for(n in 1:length(fasta_filtered)) {   
+  
+  ##skip passing whole data to the function ##increase speed  ## "fasta_filtered" name is fixed
+  
+  Freq_mat_obj[[n]] <- cgat(k_mer,n, len_trim) # executing one seq at a time    #k-mer,seq_length,trimmed_length
+  print(paste("processing sequence : ",n , sequence_new[n], sep=" "))
+  
+}
+
+names(Freq_mat_obj) <- sequence_new
+```
+
+## Calculate distances 
+
+
+```{r}
+j <- length(sequence_new)
+
+distance <- matrix(0,j,j)  ## defining the empty matrix from distance calculations
+row.names(distance) <- sequence_new[1:j]
+colnames(distance) <- sequence_new[1:j]
+
+for(n in 1:j) { 
+  for(cr in 1:j) {
+distance[n,cr] <- matrixDistance(Freq_mat_obj[[n]],Freq_mat_obj[[cr]],distance_type ='Euclidean' )  ##'Euclidean','S_Euclidean' and Manhattan
+}}
+
+distance <- round(distance, 5)
+distance[1:5,1:3]
+
+#plot(hclust(as.dist(distance)))
+
+```
+
+## Save distance matrix into mega or phylip format 
+
+```{r}
+Mega_file_name <- paste('Recombi_N_filtering_',N_filter,'_mega_distance_file_for_k_',k_mer,'.meg')
+
+### save 
+saveMegaDistance(Mega_file_name, distance) ## inputs are file name (with path) and distance 
+
+PhylipFile_name <- paste('Phylip_N_filtering_',N_filter,'distances_k_',k_mer,'.txt')
+
+ ## inputs are file name (with path) and distance 
+savePhylipDistance(PhylipFile_name, distance, mode= 'original')  ## relaxed or original/other
+
+##typical phylip allows 10 charcter for texa name ##new relaxed formart allows 250
+## http://www.phylo.org/index.php/help/relaxed_phylip
+
+```
+
+#### Integrating with other visualization tools (e.g ape and treeio )
+
+
+```{r}
+library(ape)
+
+my_nj <- ape::nj(distance)
+plot(my_nj)
+plot(my_nj,type = "cladogram")
+
+bs<-boot.phylo(my_nj, distance, nj, quiet = TRUE)
+plot(bs)
+nodelabels(bs)
+
+my_nj$node.label<-bs
+write.tree(my_nj,"njwithbs.tree.nwk")
+
+
+foo <- function() {
+col <- "green"
+for (i in 1:2)
+axis(i, col = col, col.ticks = col, col.axis = col, las = 1)
+box(lty = "19")
+}
+
+mytr <- my_nj
+#layout(matrix(1:4, 2, 2, byrow = TRUE))
+plot(mytr); foo()
+plot(mytr, "c", FALSE); foo()
+plot(mytr, "u"); foo()
+par(xpd = TRUE)
+plot(mytr, "f"); foo()
+box("outer")
+
+
+#layout(matrix(1:4, 2, 2))
+#par(las = 1)
+plot(mytr, "u"); foo()
+plot(mytr, "u", FALSE); foo()
+plot(mytr, "f"); foo()
+plot(mytr, "f", FALSE); foo()
+
+```
+
+#### write/read  tree  (Newick and Nexus format )
+
+```{r}
+tree <-write.tree(my_nj, file = "", append = FALSE, digits = 10, tree.names = FALSE)
+
+ape::write.tree(my_nj, file=paste('Newick_NJ_tree_k',k_mer,'.txt', sep='')) #for Newick format #write out trees in a text file
+ape::write.nexus(my_nj, file=paste('Nexus_NJ_tree_k',k_mer,'.txt', sep='')) ##for Nexus format
+
+
+## reading tree from file 
+ #newick.tree <- ape::read.tree("Newick_NJ_tree.txt")  
+ #nexus.tree <- ape::read.nexus("Nexus_NJ_tree.nex")
+
+```
+
+
+
+
+```{r session-info, echo=FALSE}
+sessionInfo()
+
