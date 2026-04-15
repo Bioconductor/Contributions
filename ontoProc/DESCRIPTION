@@ -1,0 +1,68 @@
+Package: ontoProc
+Title: processing of ontologies of anatomy, cell lines, and so on
+Authors@R: c(person(given="Vincent", family="Carey", role=c("ctb", "cre"),
+	   email = "stvjc@channing.harvard.edu",
+           comment = c(ORCID = "0000-0003-4046-0063")),
+	     person(given="Sara", family="Stankiewicz", role="ctb",
+	     email = "reshs@channing.harvard.edu"), person(given="Victor", family="Tarca", role="ctb", 
+		email = "vtarca11@gmail.com", comment = c(ORCID = "0009-0003-1976-0392")))
+Description: Support harvesting of diverse bioinformatic ontologies,
+	making particular use of the ontologyIndex package on CRAN.
+	We provide snapshots of key ontologies for terms about
+	cells, cell lines, chemical compounds, and anatomy, to help
+	analyze genome-scale experiments, particularly cell x compound 
+        screens.  Another purpose is to strengthen development of 
+	compelling use cases for richer interfaces to emerging ontologies.
+Version: 2.3.12
+Imports: Biobase, S4Vectors, methods, stats, utils, BiocFileCache,
+	shiny, graph, Rgraphviz, ontologyPlot, dplyr, magrittr, DT, igraph,
+	AnnotationHub, SummarizedExperiment, reticulate, R.utils, httr,
+	basilisk, jsonlite, RBGL, ellmer
+Suggests: knitr, org.Hs.eg.db, org.Mm.eg.db, testthat, BiocStyle,
+	SingleCellExperiment, celldex, rmarkdown, AnnotationDbi, magick,
+	ggraph, tidygraph, ggplot2,
+Depends: R (>= 4.1), ontologyIndex
+License: Artistic-2.0
+LazyLoad: yes
+biocViews: Infrastructure, GO
+RoxygenNote: 7.3.2
+VignetteBuilder: knitr
+Encoding: UTF-8
+Collate: 
+    'CLextend.R'
+    'CLfeats.R'
+    'autism_details.R'
+    'available_ontos.R'
+    'basilisk.R'
+    'bind_formal_tags.R'
+    'bioregistry.R'
+    'clfixer.R'
+    'common_classes.R'
+    'connect_classes.R'
+    'countClasses.R'
+    'ctmarks.R'
+    'data.R'
+    'dropStop.R'
+    'fastGrep.R'
+    'findCommonAncestors.R'
+    'formalize.R'
+    'getOntos.R'
+    'get_ordo_owl_path.R'
+    'graphNEL.R'
+    'mapNaive.R'
+    'nio_details.R'
+    'ontoDiff.R'
+    'owl2cache.R'
+    'owl_ops.R'
+    'plot.owlents.R'
+    'quickOnto.R'
+    'roots.R'
+    'setup_entities2.R'
+    'seurTab.R'
+    'shiny.R'
+    'subset_descendants.R'
+    'sym2CellOnto.R'
+    'termProc.R'
+    'treeproc.R'
+URL: https://github.com/vjcitn/ontoProc
+BugReports: https://github.com/vjcitn/ontoProc/issues

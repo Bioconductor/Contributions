@@ -1,0 +1,84 @@
+# Proposed addition to vignettes/ontoProc.Rmd
+# Insert this section after the existing "onto_plot2" demonstration blocks,
+# before the "# Related tools" section.
+
+# ============================================================
+# BEGIN INSERTION
+# ============================================================
+
+## Adaptive visualizations with ggplot2 (`onto_plot3`)
+
+The `onto_plot2` function produces publication-ready graphs using
+`Rgraphviz`, but its label handling is limited: very long ontological
+term names can overflow node boundaries.  The new `onto_plot3` function
+addresses this by building on the `ggraph` and `tidygraph` packages,
+which sit on top of ggplot2.
+
+Key improvements over `onto_plot2`:
+
+* **Automatic label wrapping** — term names are broken at word boundaries
+  using `strwrap()` so no string ever exceeds the configurable `width`
+  character limit.
+* **Auto-sizing node boxes** — `geom_node_label` draws a proper
+  rectangular border that expands to fit the wrapped text.
+* **Depth-coloured nodes** — each node is shaded by its distance from the
+  root set, giving an at-a-glance view of hierarchy depth.
+* **ggplot2 extensibility** — the returned object is a `ggplot`, so any
+  ggplot2 layer, scale, or theme can be applied afterward.
+
+```{r onto_plot3_basic, message=FALSE}
+if (requireNamespace("ggraph", quietly = TRUE) &&
+    requireNamespace("tidygraph", quietly = TRUE)) {
+  library(ontoProc)
+  cl = getOnto("cellOnto")
+  cl3k = c("CL:0000492", "CL:0001054", "CL:0000236", "CL:0000625",
+     "CL:0000576", "CL:0000623", "CL:0000451", "CL:0000556")
+  p = onto_plot3(cl, cl3k, width = 20)
+}
+```
+
+Because `onto_plot3` returns a `ggplot` object, further customisation is
+straightforward:
+
+```{r onto_plot3_custom, message=FALSE, eval=FALSE}
+if (requireNamespace("ggraph", quietly = TRUE) &&
+    requireNamespace("tidygraph", quietly = TRUE)) {
+  library(ggplot2)
+  p + theme(legend.position = "bottom") +
+    labs(title = "PBMC cell types — Cell Ontology 2023",
+         fill = "Hierarchy depth")
+}
+```
+
+For ontologies that contain especially long term definitions (such as the
+AEO anatomical entity ontology used earlier), increasing `width` prevents
+text overflow:
+
+```{r onto_plot3_aeo, message=FALSE, eval=FALSE}
+if (requireNamespace("ggraph", quietly = TRUE) &&
+    requireNamespace("tidygraph", quietly = TRUE)) {
+  aeo = owl2cache(url="http://purl.obolibrary.org/obo/aeo.owl")
+  aeoinr = setup_entities2(aeo)
+  set.seed(1234)
+  onto_plot3(aeoinr, sample(grep("AEO", names(aeoinr$name), value=TRUE), 12),
+             width = 25, label_size = 2.5)
+}
+```
+
+The `layout` argument accepts any layout algorithm supported by `ggraph`
+or `igraph`.  The default `"sugiyama"` layout is optimal for directed
+acyclic graphs (DAGs) such as ontologies, as it minimises edge crossings
+and arranges nodes top-to-bottom by hierarchy level.  For exploratory use
+with larger sub-graphs, `layout = "fr"` (Fruchterman-Reingold) or
+`layout = "kk"` (Kamada-Kawai) may give more spread-out results:
+
+```{r onto_plot3_layout, message=FALSE, eval=FALSE}
+if (requireNamespace("ggraph", quietly = TRUE) &&
+    requireNamespace("tidygraph", quietly = TRUE)) {
+  onto_plot3(cl, cl3k, layout = "kk")
+}
+```
+
+# ============================================================
+# END INSERTION
+# ============================================================
