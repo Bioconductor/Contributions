@@ -110,8 +110,8 @@ onto_plot2 = function(ont, terms2use, cex = 0.8, width = 15, ...) {
 #' @seealso \code{\link{onto_plot2}} for the classic Rgraphviz-based renderer,
 #'   \code{\link{improveNodes}} for the underlying label-wrapping helper.
 #' @importFrom ontologyPlot onto_plot
-#' @importFrom ggraph ggraph geom_edge_link geom_node_label theme_graph
-#' @importFrom tidygraph as_tbl_graph activate
+#' @importFrom ggraph ggraph geom_edge_link geom_node_label theme_graph circle
+#' @importFrom tidygraph as_tbl_graph
 #' @importFrom igraph graph_from_adjacency_matrix distances vertex_attr
 #' @importFrom ggplot2 aes arrow unit scale_fill_viridis_c labs
 #' @examples

@@ -20,7 +20,7 @@ Imports: Biobase, S4Vectors, methods, stats, utils, BiocFileCache,
 	basilisk, jsonlite, RBGL, ellmer
 Suggests: knitr, org.Hs.eg.db, org.Mm.eg.db, testthat, BiocStyle,
 	SingleCellExperiment, celldex, rmarkdown, AnnotationDbi, magick,
-	ggraph, tidygraph, ggplot2,
+	ggraph, tidygraph, ggplot2
 Depends: R (>= 4.1), ontologyIndex
 License: Artistic-2.0
 LazyLoad: yes
