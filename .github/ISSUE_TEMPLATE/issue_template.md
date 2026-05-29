@@ -30,6 +30,9 @@ Confirm the following by editing each check box to '[x]'
   Passing these checks does not result in automatic acceptance. The 
   package will then undergo a formal review and recommendations for 
   acceptance regarding other Bioconductor standards will be addressed.
+  
+- [ ] I understand Bioconductor's [AI and Third Party Code][10] policy and will
+  acknowledge accordingly if applicable.
 
 - [ ] My package addresses statistical or bioinformatic issues related
   to the analysis and comprehension of high throughput genomic data.
@@ -72,3 +75,4 @@ Follow the link on the home page of the [Bioconductor website][8] to sign up.
 [7]: https://bioconductor.org/about/code-of-conduct/
 [8]: https://bioconductor.org/
 [9]: https://bioconductor.org/developers/package-submission/#naming
+[10]: https://contributions.bioconductor.org/ai-policy-third-party.html
